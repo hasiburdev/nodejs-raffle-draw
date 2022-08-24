@@ -18,6 +18,10 @@ app.use((_req, res, next) => {
   next(error);
 });
 
-app.use((error, _req, res, next) => {});
+app.use((error, _req, res, next) => {
+  if (error.status) {
+    return res.status(error.status).json({ message: error.message });
+  }
+});
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
