@@ -6,8 +6,8 @@ const tickets = Symbol("tickets");
 class TicketCollection {
   constructor() {
     (async () => {
-      this[tickets] = (await readFile()) ?? [];
-    }).bind(this);
+      this[tickets] = await readFile();
+    }).call(this);
   }
 
   /**
@@ -52,13 +52,13 @@ class TicketCollection {
    * @returns {Ticket[]}
    */
   findByUsername(username) {
-    const tickets = this[tickets].filter(
+    const userTickets = this[tickets].filter(
       /**
        * @param {Ticket}
        */
       (ticket) => ticket.username === username
     );
-    return tickets;
+    return userTickets;
   }
 
   /**
@@ -82,7 +82,7 @@ class TicketCollection {
    * @param {string} ticketId
    * @returns {boolean}
    */
-  deleteById(ticketId) {
+  async deleteById(ticketId) {
     const index = this[tickets].findIndex(
       /**
        *
@@ -96,7 +96,7 @@ class TicketCollection {
       return false;
     } else {
       this[tickets].splice(index, 1);
-      writeFile(this[tickets]);
+      await writeFile(this[tickets]);
       return true;
     }
   }
@@ -112,6 +112,7 @@ class TicketCollection {
       const ticket = this.create(username, price);
       result.push(ticket);
     }
+    this[tickets].concat(result);
     writeFile(this[tickets]);
     return result;
   }
@@ -145,7 +146,15 @@ class TicketCollection {
       /**
        * @param {Ticket} ticket
        */
-      (ticket) => this.deleteById(ticket.id)
+      (ticket) => {
+        const index = this[tickets].findIndex((item) => ticket.id === item.id);
+
+        if (index === -1) {
+        } else {
+          this[tickets].splice(index, 1);
+          // await writeFile(this[tickets]);
+        }
+      }
     );
     writeFile(this[tickets]);
     return deletedResult;
