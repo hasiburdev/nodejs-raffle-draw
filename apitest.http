@@ -1,0 +1,28 @@
+GET http://localhost:5000/health
+
+###
+GET http://localhost:5000/api/v1/tickets
+
+###
+POST http://localhost:5000/api/v1/tickets
+Content-Type: application/json
+
+{
+    "username": "hasiburdev",
+    "price": 236
+}
+
+###
+GET http://localhost:5000/api/v1/tickets/t/QV2MPj7Z7
+###
+DELETE http://localhost:5000/api/v1/tickets/t/QV2MPj7Z7
+
+
+###
+GET http://localhost:5000/api/v1/tickets/u/hasiburdev
+###
+DELETE http://localhost:5000/api/v1/tickets/u/hasiburdev
+
+
+
+
